@@ -20,6 +20,7 @@ class API::SessionsController < ApplicationController
     def encode_token(payload={}) # encode token
         exp = 24.hours.from_now
         payload[:exp] = exp.to_i
-        JWT.encode(payload, Rails.application.credentials.dig(:secret_key_base))
+        # for test
+        JWT.encode(payload, "Rails.application.secrets.secret_key_base")
     end
 end
