@@ -2,7 +2,7 @@ class API::UsersController < ApplicationController
     def index
         #render json: { msg: session[:user_id] }, status: :ok
         if request.headers["authorization"]
-            user = JWT.decode request.headers["authorization"], Rails.application.secrets.secret_key_base, true, { algorith: 'HS256' }
+            user = JWT.decode request.headers["authorization"], "Rails.application.secrets.secret_key_base", true, { algorith: 'HS256' }
             render json: user, status: :ok
         else
             render json: { msg: "Authorization token needed"}, status: :unauthorized
