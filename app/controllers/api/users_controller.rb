@@ -5,7 +5,7 @@ class API::UsersController < ApplicationController
             user = JWT.decode request.headers["authorization"], Rails.application.secrets.secret_key_base, true, { algorith: 'HS256' }
             render json: user, status: :ok
         else
-            render json: { msg: "Authorization token needed"}, status: :unauthorized
+            render_not_logged_in
         end
     end
 
@@ -14,7 +14,7 @@ class API::UsersController < ApplicationController
         if user.save
             render json: user.to_json(only: [:id, :username]), status: 200
         else
-            render json: { msg: user.errors }, status: :unprocessable_entity
+            render json: { errors: user.errors.full_messages }, status: :unprocessable_entity
         end
     end
 
@@ -25,10 +25,10 @@ class API::UsersController < ApplicationController
             if user.save
                 render json: user.to_json(only: [:id, :username]) , status: :ok
             else
-                render json: { msg: user.errors, error: "Error while saving" }, status: 402
+                render json: { errors: user.errors.full_messages }, status: 402
             end
         else
-            render json: { msg: user.errors, error: "Authorization error" }, status: :unauthorized
+            render json: { errors: user.errors.full_messages }, status: :unauthorized
         end
     end
 
@@ -47,7 +47,7 @@ class API::UsersController < ApplicationController
             user.delete
             render json: {msg: 'User deleted!'}, status: :ok
         else
-            render jsın: { msg: user.errors }, status: :unauthorized
+            render json: { errors: user.errors.full_messages }, status: :unauthorized
         end
     end
 
