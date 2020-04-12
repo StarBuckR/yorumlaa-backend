@@ -10,7 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_10_221328) do
+ActiveRecord::Schema.define(version: 2020_04_11_220948) do
+
+  create_table "comments", force: :cascade do |t|
+    t.text "body"
+    t.integer "like", default: 0
+    t.integer "dislike", default: 0
+    t.integer "product_id"
+    t.integer "user_id"
+    t.string "username"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
 
   create_table "friendly_id_slugs", force: :cascade do |t|
     t.string "slug", null: false

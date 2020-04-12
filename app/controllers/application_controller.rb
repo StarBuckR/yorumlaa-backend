@@ -2,7 +2,21 @@ class ApplicationController < ActionController::API
     include ExceptionHandler
 
     helper_method :current_user, :logged_in?, :is_admin?, :render_not_logged_in,
-                    :decode_token, :encode_token
+                    :decode_token, :encode_token, :require_same_user, :require_admin 
+
+    def require_same_user
+        if !current_user
+            render json: { message: "Bu işlemi gerçekleştirmek için kendinize ait olması gerekiyor" }, 
+                            status: :unauthorized
+        end
+    end
+
+    def require_admin
+        if !is_admin?
+            render json: { message: "Bu işlemi gerçekleştirmek için yetkili olmanız gerekiyor" }, 
+                            status: :unauthorized
+        end
+    end
 
     def current_user
         # kontrolünü decode_token ve sonrasında exception_handler.rb 
@@ -15,7 +29,7 @@ class ApplicationController < ActionController::API
     end
 
     def logged_in?
-        !!current_user # token bir kullanıcıy eşitse ve sorun yoksa true döndürüyor
+        !!current_user
     end
 
     def is_admin?

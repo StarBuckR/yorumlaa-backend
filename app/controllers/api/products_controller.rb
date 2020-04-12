@@ -1,7 +1,8 @@
 class API::ProductsController < ApplicationController
     def show
         @product = Product.friendly.find(params[:id])
-        render json: @product, status: :ok
+        @comments = Comment.where(product_id: @product.id).all
+        render :show, status: :ok
     end
 
     def create
@@ -12,8 +13,6 @@ class API::ProductsController < ApplicationController
             else
                 render json: { errors: product.errors.full_messages }, status: 401
             end
-        else
-            render_not_logged_in # giriş yapman gerektiği mesajını döndürüyor
         end
     end
 
