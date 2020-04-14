@@ -16,6 +16,8 @@ Rails.application.routes.draw do
     delete '/products/:slug', to: 'comments#destroy'
 
     get '/users/:id/comments', to: 'comments#show'
-    #post 'products/:slug/like', to: 'comment_details#create'
+    post '/comments/:id', to: 'user_comment_details#create'
+    patch '/comments/:id', to: 'user_comment_details#update'
+    delete '/comments/:id', to: 'user_comment_details#destroy'
   end
 end

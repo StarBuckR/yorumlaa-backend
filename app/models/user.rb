@@ -2,6 +2,7 @@ class User < ApplicationRecord
     has_secure_password
     
     has_many :comments
+    has_many :user_comment_details
 
     validates :username, uniqueness: { case_sensitive: false }, presence: true
 
