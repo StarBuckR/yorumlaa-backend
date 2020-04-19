@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_14_165203) do
+ActiveRecord::Schema.define(version: 2020_04_19_112731) do
 
   create_table "comments", force: :cascade do |t|
     t.text "body"
@@ -42,6 +42,12 @@ ActiveRecord::Schema.define(version: 2020_04_14_165203) do
     t.datetime "updated_at", precision: 6, null: false
     t.string "slug"
     t.index ["slug"], name: "index_products_on_slug", unique: true
+  end
+
+  create_table "rating_categories", force: :cascade do |t|
+    t.string "category_name"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "user_comment_details", force: :cascade do |t|

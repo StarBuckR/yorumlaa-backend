@@ -10,6 +10,7 @@ Rails.application.routes.draw do
 
     post '/admin/approve', to: 'admins#approve'
     get '/admin/list_not_approved', to: 'admins#list_not_approved'
+    post '/admin/create_rating_category', to: 'admins#create_rating_category'
 
     post '/products/:slug/create_comment', to: 'comments#create'
     patch '/products/:slug', to: 'comments#update'
