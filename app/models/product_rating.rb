@@ -1,0 +1,3 @@
+class ProductRating < ApplicationRecord
+    
+end

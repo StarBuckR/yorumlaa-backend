@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_19_112731) do
+ActiveRecord::Schema.define(version: 2020_04_19_114805) do
 
   create_table "comments", force: :cascade do |t|
     t.text "body"
@@ -46,6 +46,15 @@ ActiveRecord::Schema.define(version: 2020_04_19_112731) do
 
   create_table "rating_categories", force: :cascade do |t|
     t.string "category_name"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "ratings", force: :cascade do |t|
+    t.integer "user_id"
+    t.integer "product_id"
+    t.integer "product_category_id"
+    t.integer "rating_value"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end

@@ -19,6 +19,8 @@ Rails.application.routes.draw do
     get '/users/:id/comments', to: 'comments#show'
     post '/comments/:id', to: 'user_comment_details#create'
     patch '/comments/:id', to: 'user_comment_details#update'
-    delete '/comments/:id', to: 'user_comment_details#destroy'
+    delete '/comment_details', to: 'user_comment_details#destroy'
+
+    patch '/products/:slug/rating', to: 'comments#update_rating'
   end
 end
