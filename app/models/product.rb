@@ -7,4 +7,13 @@ class Product < ApplicationRecord
 
     validates :title, presence: true, length: { maximum: 100 }, uniqueness: { case_sensitive: false }
     validates :approval, default: false
+
+    HUMANIZED_ATTRIBUTES = {
+        title: "Başlık",
+        approval: "Onay"
+    }
+    
+    def self.human_attribute_name(attr, options = {}) # 'options' wasn't available in Rails 3, and prior versions.
+        HUMANIZED_ATTRIBUTES[attr.to_sym] || super
+    end
 end
