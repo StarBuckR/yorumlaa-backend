@@ -1,16 +1,21 @@
 class API::SessionsController < ApplicationController
     def create
-        user = User.find_by(username: params[:user][:username])
-        if user && user.authenticate(params[:user][:password])
+        user = User.where(username: params[:user][:email_or_username])
+                .or(User.where(email: params[:user][:email_or_username])).first
+        # find user by username or email
+        
+        if user && user.authenticate(params[:user][:password]) # if authenticated
             #session[:user_id] = user.id
-            render json: { jwt: encode_token({id: user.id, username: user.username})}, status: :created
-        else
-            render json: { message: 'Kullanıcı adı veya şifre hatalı' }, status: :unauthorized
+            render json: { jwt: encode_token({id: user.id, username: user.username})}, 
+                status: :created # render jwt token
+        else # if not authenticated
+            render json: { message: 'Kullanıcı adı, email veya şifre hatalı' }, 
+                status: :unauthorized # render username, email or password invalid
         end
     end
 
     def destroy
         #session[:user_id] = nil
-        render json: { message: 'Session Destroyed' }, status: :ok
+        render json: { message: 'Session Destroyed' }, status: :ok # Display session destroyed
     end
 end

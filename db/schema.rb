@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_19_114805) do
+ActiveRecord::Schema.define(version: 2020_04_19_162803) do
 
   create_table "comments", force: :cascade do |t|
     t.text "body"
@@ -34,6 +34,13 @@ ActiveRecord::Schema.define(version: 2020_04_19_114805) do
     t.index ["sluggable_type", "sluggable_id"], name: "index_friendly_id_slugs_on_sluggable_type_and_sluggable_id"
   end
 
+  create_table "product_ratings", force: :cascade do |t|
+    t.integer "product_id"
+    t.json "category_names"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
   create_table "products", force: :cascade do |t|
     t.string "title"
     t.boolean "approval", default: false
@@ -53,8 +60,7 @@ ActiveRecord::Schema.define(version: 2020_04_19_114805) do
   create_table "ratings", force: :cascade do |t|
     t.integer "user_id"
     t.integer "product_id"
-    t.integer "product_category_id"
-    t.integer "rating_value"
+    t.json "ratings"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end

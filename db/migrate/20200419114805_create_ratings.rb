@@ -3,8 +3,9 @@ class CreateRatings < ActiveRecord::Migration[6.0]
     create_table :ratings do |t|
       t.integer :user_id
       t.integer :product_id
-      t.integer :product_category_id
-      t.integer :rating_value
+      #t.string :rating_category_names, array: true
+      #t.integer :rating_values, array: true
+      t.json :ratings
 
       t.timestamps
     end

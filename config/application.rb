@@ -34,6 +34,8 @@ module Api
     # Skip views, helpers and assets when generating a new resource.
     config.api_only = true
 
+    config.action_dispatch.perform_deep_munge = false
+    
     config.i18n.available_locales = [:en, :tr]
     config.i18n.default_locale = :tr
   end
