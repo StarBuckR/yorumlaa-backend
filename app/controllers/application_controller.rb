@@ -5,20 +5,21 @@ class ApplicationController < ActionController::API
                     :decode_token, :encode_token, :require_same_user, :require_admin,
                     :require_login
 
+    # require same user for related and wanted functions
     def require_same_user
         if !current_user
             render json: { message: "Bu işlemi gerçekleştirmek için kendinize ait olması gerekiyor" }, 
                             status: :unauthorized and return
         end
     end
-
+    # require admin for related and wanted functions
     def require_admin
         if !is_admin?
             render json: { message: "Bu işlemi gerçekleştirmek için yetkili olmanız gerekiyor" }, 
                             status: :unauthorized and return
         end
     end
-
+    # require login for related and wanted functions
     def require_login
         if !logged_in?
             render json: { message: "Bu işlemi gerçekleştirmek için giriş yapmanız gerekiyor" }, 
@@ -27,8 +28,8 @@ class ApplicationController < ActionController::API
     end
 
     def current_user
-        # kontrolünü decode_token ve sonrasında exception_handler.rb 
-        # içinde yaptığım için, if koymama gerek yok
+        # I did it's controls in de decode_token and exception_handler.rb 
+        # so don't have to control here with any if
         token = request.headers["authorization"]
         user = decode_token(token)
            
@@ -36,23 +37,26 @@ class ApplicationController < ActionController::API
         @current_user ||= User.find(user_id) if user_id
     end
 
+    # if logged in return true, else return false
     def logged_in?
         !!current_user
     end
 
     def is_admin?
         if current_user&.role == "admin"
-            return true # eğer admin ise true döndürüyor
+            return true # if admin return true
         else
-            return false # eğer admin değil ise false döndürüyor
+            return false # if not admin return false
         end
     end
 
+    # if user is not logged in, render message that user needs to log in
     def render_not_logged_in 
-        render json: { msg: "Bu işlemi gerçekleştirmeniz için giriş yapmanız gerekiyor" }, 
+        render json: { message: "Bu işlemi gerçekleştirmeniz için giriş yapmanız gerekiyor" }, 
                         status: :unauthorized
     end
 
+    # decoding JWT token function, it basically gets token, if any error happens(expiration or verification), render errors
     def decode_token(token)
         body = JWT.decode(token, Rails.application.secrets.secret_key_base)[0]
         HashWithIndifferentAccess.new body
@@ -63,7 +67,8 @@ class ApplicationController < ActionController::API
             raise ExceptionHandler::DecodeError, e.message
     end
     
-    def encode_token(payload={}) # encode token
+    # encode token with payload, given expiration 24 hours from now
+    def encode_token(payload={})
         exp = 24.hours.from_now
         payload[:exp] = exp.to_i
         JWT.encode(payload, Rails.application.secrets.secret_key_base)

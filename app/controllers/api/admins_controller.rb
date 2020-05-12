@@ -22,39 +22,40 @@ class API::AdminsController < ApplicationController
     end
 
     def create_rating_category
-        if !RatingCategory.find_by(category_name: params[:category_name])
-            @category = RatingCategory.new(category_name: params[:category_name])
-            if @category.save
+        if !RatingCategory.find_by(category_name: params[:category_name]) # if category name does not exists
+            @category = RatingCategory.new(category_name: params[:category_name]) # create rating category
+            if @category.save # if category is valid and saveable, render success message
                 render json: { message: "Kategori başarı ile yaratıldı" }, status: :created
-            else
+            else # if category isn't valid and not saved, render error messages
                 render json: { errors: @category.errors.full_messages }, status: :unprocessable_entity
             end
-        else
+        else # if category name exists, render error message
             render json: { message: "Bu isimde bir kategori zaten var" }, status: :unprocessable_entity
         end
     end
 
     def create_product_ratings
-        if @product_rating.save
-            render json: @product_rating, status: :created
-        else
+        if @product_rating.save # save product rating
+            render json: @product_rating, status: :created # render product rating
+        else # if cannot save, render error messages
             render json: { errors: @product_rating.errors.full_messages }, status: :unprocessable_entity
         end
     end
 
-    def render_not_admin
+    def render_not_admin # render that user is not admin
         render json: { message: "Bu işlemi gerçekleştirmek için yetkili olmanız gerekiyor" },
                                 status: :unauthorized
     end
 
     private
-    def prevent_duplicate
-        if ProductRating.find_by(product_id: params[:product_id])
+    def prevent_duplicate #prevent rating duplication
+        if ProductRating.find_by(product_id: params[:product_id]) # if rating is exists, render error and return
             render json: { message: "Zaten bir product rating bulunuyor" }, 
-                        status: :unprocessable_entity
+                        status: :unprocessable_entity and return
         end
     end
-
+    
+    # set product rating params, by controlling category and check couplings
     def set_params
         @product_rating = ProductRating.new(product_id: params[:product_id])
         ratings = params[:ratings]
