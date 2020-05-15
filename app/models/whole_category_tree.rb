@@ -1,0 +1,2 @@
+class WholeCategoryTree < ApplicationRecord
+end

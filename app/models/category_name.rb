@@ -1,5 +1,4 @@
-class RatingCategory < ApplicationRecord
-
+class CategoryName < ApplicationRecord
     validates :category_name, presence: true, length: { minimum: 3, maximum: 30 },
         uniqueness: { case_sensitive: false }
 
