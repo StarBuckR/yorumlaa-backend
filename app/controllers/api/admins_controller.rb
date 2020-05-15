@@ -2,13 +2,12 @@ class API::AdminsController < ApplicationController
     # before admin actions, check if user admin
     before_action :require_admin, only: [:approve, :list_not_approved, 
         :create_rating_category, :create_product_ratings, :create_category,
-        :create_category_tree, :delete_category_tree, :create_whole_category_tree]
+        :display_category_tree]
 
     before_action :set_params, only: [:create_product_ratings] # set params before creating product ratingss
     #before_action :prevent_rating_duplicate, only: [:create_product_ratings] # prevent duplicate before creating product ratings
-    before_action :category_params, only:[:create_category_tree]
-    before_action :ensure_category_exists, only:[:create_category_tree]
-    before_action :prevent_duplicate_category_tree, only:[:create_category_tree]
+    before_action :category_params, only:[:display_category_tree]
+    before_action :prevent_category_duplication, only:[:create_category]
 
     def approve
         product = Product.find_by(id: params[:id]) # get product by id
@@ -49,8 +48,15 @@ class API::AdminsController < ApplicationController
 
     # create product category (electronics etc.) (create only category name)
     def create_category
-        # create category by name
-        category = CategoryName.new(category_name: params[:category_name])
+        category = Category.new(category_params) # create category with credentials
+        parent = params[:category][:parent]
+        if parent # if parent attribute is filled, set parent
+            category.parent = Category.find_by(name: parent)
+            if !category.parent # if parent doesn't exist, render message and return
+                render json: { message: "Parent kategori bulunamadı!" }, status: :unprocessable_entity and return
+            end
+        end
+
         if category.save # check if category is valid
             render json: category, status: :created
         else # if not valid, render error messages
@@ -58,24 +64,10 @@ class API::AdminsController < ApplicationController
         end
     end
 
-    # create category tree
-    def create_category_tree 
-        category_tree =  CategoryTree.new(category_params)
-        if category_tree.save
-            render json: { message: category_tree }, status: :created
-        else
-            render json: { errors: category_tree.errors.full_messages }, status: :unprocessable_entity
-        end
-    end
+    def display_category_tree
+        tree = Category.all.arrange_serializable # find all categories and tre
 
-    def delete_category_tree
-        category_tree = CategoryTree.find_by(category_params)
-        if category_tree
-            category_tree.delete
-            render json: { message: "Kategori ağacı başarı ile silindi!" }, status: :ok
-        else
-            render json: { message: "Kategori ağacı bulunamadı!" }, status: :unprocessable_entity
-        end
+        render json: tree.as_json
     end
 
     def render_not_admin # render that user is not admin
@@ -83,69 +75,14 @@ class API::AdminsController < ApplicationController
                                 status: :unauthorized
     end
 
-    def create_whole_category_tree 
-        # i don't delete recent trees for future references
-        
-        categories = CategoryName.all
-        tree = Hash.new()
-        tree = arrayize_tree(categories)
-        render json: tree
-        
-        #category_tree = WholeCategoryTree.new(tree: tree)
-        return
-        if category_tree.save
-            render json: category_tree, status: :created
-        else
-            render json: { errors: category_tree.errors.full_messages }, status: :unprocessable_entity
-        end
-    end
-
     private
-    # def arrayize_tree(categories)
-    #     all = TreeNode.new(categories.size)
-        
-    #     categories.each do |category|
-    #         parent = category.category_name
-    #         if !CategoryTree.find_by(current_category: parent)
-    #             all.children << (recursive_children(parent))
-    #             #all.merge!("#{parent}": recursive_children(parent).to_hash)
-    #         end
-    #     end
-
-    #     return all
-    # end
-
-    # def recursive_children(parent)
-    #     children = CategoryTree.where(parent_category: parent).pluck(:current_category)
-        
-    #     current_array = Tree.new(children.size)
-    #     current_array.children << children
-
-    #     children.each do |child|
-    #         if CategoryTree.find_by(parent_category: child)
-    #             current_array.children << (recursive_children(child))
-    #         end
-    #     end
-
-    #     return current_array
-    # end
-
     def category_params
-        params.require(:category).permit(:current_category, :parent_category)
+        params.require(:category).permit(:name)
     end
 
-    # this function ensures categories exists
-    def ensure_category_exists
-        params.require(:category).each do |category|
-            if !CategoryName.find_by(category_name: category) # if can not find category, render error and return
-                render json: { message: "Kategori bulunamadı: '#{category.at(1)}'" }, status: :unprocessable_entity and return
-            end
-        end
-    end
-
-    def prevent_duplicate_category_tree
-        if CategoryTree.find_by(category_params)
-            render json: { message: "Zaten bu şekilde bir kategori ağacı bulunuyor" }, status: :unprocessable_entity and return
+    def prevent_category_duplication
+        if Category.find_by(category_params)
+            render json: { message: "Bu kategori hali hazırda var" }, status: :unprocessable_entity
         end
     end
 

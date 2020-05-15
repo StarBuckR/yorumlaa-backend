@@ -35,8 +35,6 @@ Rails.application.routes.draw do
 
     # categories
     post '/categories', to: 'admins#create_category'
-    post '/categories/tree', to: 'admins#create_category_tree'
-    delete '/categories/tree', to: 'admins#delete_category_tree'
-    post '/categories/tree/1', to: 'admins#create_whole_category_tree'
+    get '/categories/tree', to: 'admins#display_category_tree'
   end
 end

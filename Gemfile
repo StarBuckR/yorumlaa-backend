@@ -24,6 +24,7 @@ gem 'bcrypt', '~> 3.1.7'
 gem 'jwt'
 gem 'friendly_id', '~> 5.2.4'
 gem 'rails-i18n', '~> 6.0.0'
+gem 'ancestry'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
