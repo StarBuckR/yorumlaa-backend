@@ -3,7 +3,8 @@ class API::AdminsController < ApplicationController
     before_action :require_admin, only: [:approve, :list_not_approved, 
         :create_rating_category, :create_product_ratings, :create_category,
         :display_category_tree]
-
+    
+    before_action :ensure_product_exists, only: [:create_product_ratings]
     before_action :set_params, only: [:create_product_ratings] # set params before creating product ratingss
     #before_action :prevent_rating_duplicate, only: [:create_product_ratings] # prevent duplicate before creating product ratings
     before_action :category_params, only:[:display_category_tree]
@@ -83,6 +84,12 @@ class API::AdminsController < ApplicationController
     def prevent_category_duplication
         if Category.find_by(category_params)
             render json: { message: "Bu kategori hali hazırda var" }, status: :unprocessable_entity
+        end
+    end
+
+    def ensure_product_exists
+        if !Product.find_by(id: params[:product_id])
+            render json: { message: "Ürün bulunamadı" }, status: :unprocessable_entity
         end
     end
 

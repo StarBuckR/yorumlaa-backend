@@ -36,5 +36,9 @@ Rails.application.routes.draw do
     # categories
     post '/categories', to: 'admins#create_category'
     get '/categories/tree', to: 'admins#display_category_tree'
+
+    # followings
+    post '/products/:slug/follow', to: 'followings#follow'
+    get '/notifications', to: 'followings#get_notifications'
   end
 end
