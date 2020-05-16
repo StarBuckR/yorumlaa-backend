@@ -2,6 +2,8 @@ class Product < ApplicationRecord
     has_many :comments
     has_many :ratings
 
+    has_many_attached :images
+
     extend FriendlyId
     friendly_id :title, use: :slugged
 

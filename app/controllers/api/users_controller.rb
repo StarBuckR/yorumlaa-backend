@@ -16,6 +16,7 @@ class API::UsersController < ApplicationController
         else 
             render json: { errors: user.errors.full_messages }, status: :unprocessable_entity # if not saved, display errors
         end
+        byebug
     end
 
     def update
@@ -33,9 +34,9 @@ class API::UsersController < ApplicationController
     end
 
     def show
-        user = User.find_by(id: params[:id]) # find user by id on the url
-        if user # if user exists
-            render json: user.to_json(only: [:id, :username]), status: :ok # display id and username
+        @user = User.find_by(id: params[:id]) # find user by id on the url
+        if @user # if user exists
+            render :show, status: :ok # display id and username
         else # if not exists
             render json: { message: "Kullanıcı bulunamadı" }, status: 404 # display user not found
         end
@@ -53,6 +54,6 @@ class API::UsersController < ApplicationController
 
     private
     def user_params
-        params.require(:user).permit(:username, :email, :password) # permit params under user
+        params.require(:user).permit(:username, :email, :password, :avatar) # permit params under user
     end
 end

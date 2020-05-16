@@ -1,6 +1,8 @@
 class User < ApplicationRecord
     has_secure_password
     
+    has_one_attached :avatar
+
     has_many :comments
     has_many :user_comment_details
     has_many :ratings

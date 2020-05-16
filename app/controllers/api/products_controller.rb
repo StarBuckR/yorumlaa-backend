@@ -10,28 +10,24 @@ class API::ProductsController < ApplicationController
 
     def create
         product = Product.new(product_params) # create new product with params under product_params
-        if product.valid? && product.save # if product is valid and saved
+        
+        if product.valid? && product.images.attached? && product.save # if product is valid and saved
             render json: product, status: :created # render the product
         else # if not valid
-            render json: { errors: product.errors.full_messages }, status: 401 # render errors
+            render json: { errors: product.errors.full_messages }, status: :unprocessable_entity # render errors
         end
+        byebug
     end
 
     private
 
     def product_params
-        params.require(:product).permit(:title, :category) # permit title under product object
+        params.require(:product).permit(:title, :category, images:[]) # permit title under product object
     end
 
     def ensure_category_exists
         if !Category.find_by(name: params[:product][:category]) #if category does not exist, render message an return
             render json: { message: "Kategori bulunamadı" }, status: :unprocessable_entity and return
-        end
-    end
-
-    def require_login
-        if !logged_in
-            return
         end
     end
 end
