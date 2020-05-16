@@ -1,4 +1,5 @@
 class API::ProductsController < ApplicationController
+    before_action :ensure_category_exists, only: [:create]
     def show
         @product = Product.friendly.find(params[:id]) # get product from slug or id
         @comments = Comment.where(product_id: @product.id).all #get all comments under that product
@@ -19,6 +20,12 @@ class API::ProductsController < ApplicationController
     private
 
     def product_params
-        params.require(:product).permit(:title) # permit title under product object
+        params.require(:product).permit(:title, :category) # permit title under product object
+    end
+
+    def ensure_category_exists
+        if !Category.find_by(name: params[:product][:category]) #if category does not exist, render message an return
+            render json: { message: "Kategori bulunamadı" }, status: :unprocessable_entity and return
+        end
     end
 end
