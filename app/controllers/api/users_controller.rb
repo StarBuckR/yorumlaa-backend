@@ -16,7 +16,6 @@ class API::UsersController < ApplicationController
         else 
             render json: { errors: user.errors.full_messages }, status: :unprocessable_entity # if not saved, display errors
         end
-        byebug
     end
 
     def update
