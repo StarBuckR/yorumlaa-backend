@@ -7,12 +7,12 @@ module ExceptionHandler
     included do
       rescue_from ExceptionHandler::DecodeError do |_error|
         render json: {
-          message: "Erişim reddedildi! Geçersiz token girildi."
+          message: "Bu işlem için giriş yapmanız gerekiyor."
         }, status: :unauthorized
       end
       rescue_from ExceptionHandler::ExpiredSignature do |_error|
         render json: {
-          message: "Erişim reddedildi! Tokenin süresi doldu."
+          message: "Bu işlem için giriş yapmanız gerekiyor."
         }, status: :unauthorized
       end
     end

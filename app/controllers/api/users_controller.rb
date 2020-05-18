@@ -11,7 +11,9 @@ class API::UsersController < ApplicationController
 
     def create
         user = User.new(user_params) # create new user
+        user.verification = SecureRandom.hex(10)
         if user.save # try to save user
+            UserMailer.send_mail(user).deliver_now!
             render json: user.to_json(only: [:id, :username]), status: 200 # if saved, print id and username
         else 
             render json: { errors: user.errors.full_messages }, status: :unprocessable_entity # if not saved, display errors
@@ -34,6 +36,7 @@ class API::UsersController < ApplicationController
 
     def show
         @user = User.find_by(id: params[:id]) # find user by id on the url
+        
         if @user # if user exists
             render :show, status: :ok # display id and username
         else # if not exists
@@ -51,8 +54,20 @@ class API::UsersController < ApplicationController
         end
     end
 
+    def verify
+        user = User.find_by(id: params[:id])
+        if params[:verification].eql?(user.verification)
+            user.update(verification: "true")
+            
+            render json: { message: "Hesap onaylandı!"}, status: :ok
+        else
+            render json: { message: "Onay kodu hatalı" }, status: :unprocessable_entity
+        end
+    end
+
     private
     def user_params
         params.require(:user).permit(:username, :email, :password, :avatar) # permit params under user
     end
+
 end

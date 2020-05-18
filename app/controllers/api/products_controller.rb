@@ -16,7 +16,6 @@ class API::ProductsController < ApplicationController
         else # if not valid
             render json: { errors: product.errors.full_messages }, status: :unprocessable_entity # render errors
         end
-        byebug
     end
 
     private

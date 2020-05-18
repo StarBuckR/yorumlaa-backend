@@ -25,6 +25,7 @@ gem 'jwt'
 gem 'friendly_id', '~> 5.2.4'
 gem 'rails-i18n', '~> 6.0.0'
 gem 'ancestry'
+gem 'mailjet'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

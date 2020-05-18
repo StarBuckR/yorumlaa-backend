@@ -9,6 +9,9 @@ Rails.application.routes.draw do
     delete '/logout', to: 'sessions#destroy'
     post '/signup', to: 'users#create'
 
+    # user verification
+    post '/users/:id/verify', to: 'users#verify' 
+
     # admin product approving
     post '/admin/approve', to: 'admins#approve'
     get '/admin/list_not_approved', to: 'admins#list_not_approved'

@@ -3,7 +3,6 @@ class User < ApplicationRecord
     
     has_one_attached :avatar
 
-    
     has_many :comments
     has_many :user_comment_details
     has_many :ratings
@@ -17,7 +16,7 @@ class User < ApplicationRecord
                 presence: true, format: { with: EMAIL_REGEX }
 
     PASSWORD_REGEX = /\A(?=.{6,40})(?=.*\d)(?=.*[a-z]|[A-Z])/i
-    validates :password, presence: true, length: { minimum: 6, maximum: 30 }, 
+    validates :password, on: :create, length: { minimum: 6, maximum: 30 }, 
             format: { with: PASSWORD_REGEX, message: "en az 1 rakam ve 1 harf içermelidir" }
                 
     HUMANIZED_ATTRIBUTES = {
