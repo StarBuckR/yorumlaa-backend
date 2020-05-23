@@ -4,6 +4,9 @@ Rails.application.routes.draw do
     resources :sessions, only: [:create, :destroy]
     
     resources :products, only: [:show, :create]
+    # product search
+    post '/products/search', to: 'products#search'
+
     # user authentication
     post '/login', to: 'sessions#create'
     delete '/logout', to: 'sessions#destroy'

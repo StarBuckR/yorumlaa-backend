@@ -18,6 +18,15 @@ class API::ProductsController < ApplicationController
         end
     end
 
+    def search
+        products = Product.search(params[:search])
+        if products
+            render json: products, status: :ok
+        else
+            render json: { errors: products.errors.full_messages }, status: :unprocessable_entity
+        end
+    end
+
     private
 
     def product_params
