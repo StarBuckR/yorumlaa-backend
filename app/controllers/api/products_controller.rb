@@ -27,6 +27,16 @@ class API::ProductsController < ApplicationController
         end
     end
 
+    def search_by_category
+        category = params[:category]
+        if category
+            products = Product.category_search(category)
+            render json: products, status: :ok
+        else
+            render json: { message: "Kategori bulunamadı!" }, status: :unprocessable_entity
+        end
+    end
+
     private
 
     def product_params

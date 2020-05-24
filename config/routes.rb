@@ -6,6 +6,7 @@ Rails.application.routes.draw do
     resources :products, only: [:show, :create]
     # product search
     post '/products/search', to: 'products#search'
+    post '/products/search_by_category', to: 'products#search_by_category'
 
     # user authentication
     post '/login', to: 'sessions#create'
@@ -41,7 +42,7 @@ Rails.application.routes.draw do
 
     # categories
     post '/categories', to: 'admins#create_category'
-    get '/categories/tree', to: 'admins#display_category_tree'
+    post '/categories/tree', to: 'admins#display_category_tree'
 
     # followings
     post '/products/:slug/follow', to: 'followings#follow'

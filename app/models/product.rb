@@ -22,4 +22,8 @@ class Product < ApplicationRecord
     def self.search(search)
         where("title LIKE ?", "%#{search}%")
     end
+
+    def self.category_search(search)
+        where("category LIKE ?", "%#{search}%")
+    end
 end
