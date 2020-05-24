@@ -1,13 +1,12 @@
 class API::AdminsController < ApplicationController
     # before admin actions, check if user admin
     before_action :require_admin, only: [:approve, :list_not_approved, 
-        :create_rating_category, :create_product_ratings, :create_category,
-        :display_category_tree]
+        :create_rating_category, :create_product_ratings, :create_category]
     
     before_action :ensure_product_exists, only: [:create_product_ratings]
     before_action :set_params, only: [:create_product_ratings] # set params before creating product ratingss
     #before_action :prevent_rating_duplicate, only: [:create_product_ratings] # prevent duplicate before creating product ratings
-    before_action :category_params, only:[:display_category_tree]
+    before_action :category_params, only:[:create_category]
     before_action :prevent_category_duplication, only:[:create_category]
 
     def approve
