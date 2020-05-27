@@ -5,6 +5,9 @@ class API::ProductsController < ApplicationController
     def show
         @product = Product.friendly.find(params[:id]) # get product from slug or id
         @comments = Comment.where(product_id: @product.id).all #get all comments under that product
+        @ratings = average_ratings(@product.id)
+        @all_ratings = Rating.where(product_id: @product.id).all
+
         render :show, status: :ok # render product page
     end
 
@@ -35,6 +38,19 @@ class API::ProductsController < ApplicationController
         else
             render json: { message: "Kategori bulunamadı!" }, status: :unprocessable_entity
         end
+    end
+
+    def average_ratings(product_id)
+        all_ratings = Hash.new()
+
+        product_ratings = Rating.where(product_id: product_id).all.pluck(:ratings)
+        product_ratings.each do |ratings|
+            ratings.each do |rating|
+                all_ratings.merge!("#{rating["category_name"]}": rating["rating_value"]){ |k, a_value, b_value| (a_value + b_value).to_f / 2.to_f }
+            end
+        end
+
+        return all_ratings
     end
 
     private

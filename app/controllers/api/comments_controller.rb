@@ -10,7 +10,9 @@ class API::CommentsController < ApplicationController
     before_action :control_ratings, only: [:update_rating] # control credentials before updating rating
 
     def show
-        @comments = Comment.where(user_id: User.find_by(id: params[:id])).all # find users all comments
+        @comments = Comment.joins("JOIN ratings ON comments.user_id = ratings.user_id").where(user_id: User.find_by(id: params[:id])).all # find users all comments
+        @ratings = Rating.where(user_id: User.find_by(id: params[:id])).all
+        
         if !User.find_by(id: params[:id]) # if user is not exists, render not exists
             render json: { message: "Kullanıcı bulunamadı!" }, status: :unprocessable_entity and return
         end
