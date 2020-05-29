@@ -4,17 +4,27 @@ json.breadcrumb breadcrumb
 
 json.images @product.images.map{|img| ({ image: url_for(img) })}
 
-json.ratings @ratings
+overall_average = 0
+@ratings.each do |rating|
+    overall_average = (overall_average.to_f + rating.last) / 2.to_f
+end
+
+json.ratings do 
+    json.overall overall_average
+    json.particularly @ratings
+end
 
 json.product @product
 
-user_average = 0
-json.comments @all_ratings do |comment|
+json.comments @comments.each_with_index.to_a do |(comment, index)|
+    json.comment comment
 
-    comment.ratings.each do |rating|
-        user_average = (user_average + rating["rating_value"]).to_f / 2.to_f
+    average_rating = 0
+    @all_ratings.each do |rating|
+        rating.ratings.each do |value|
+            average_rating = (average_rating + value["rating_value"]).to_f / 2.to_f
+        end
     end
 
-    json.average_rating user_average
-    json.comment comment
+    json.rating average_rating
 end
