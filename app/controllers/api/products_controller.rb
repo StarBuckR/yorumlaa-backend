@@ -33,8 +33,13 @@ class API::ProductsController < ApplicationController
     def search_by_category
         category = params[:category]
         if category
-            products = Product.category_search(category)
-            render json: products, status: :ok
+            @products = Product.category_search(category)
+            @ratings = []
+            @products.each do |product|
+                @ratings.push(average_ratings(product.id))
+            end
+            byebug
+            render :category, status: :ok
         else
             render json: { message: "Kategori bulunamadı!" }, status: :unprocessable_entity
         end
