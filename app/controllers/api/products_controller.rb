@@ -38,7 +38,6 @@ class API::ProductsController < ApplicationController
             @products.each do |product|
                 @ratings.push(average_ratings(product.id))
             end
-            byebug
             render :category, status: :ok
         else
             render json: { message: "Kategori bulunamadı!" }, status: :unprocessable_entity
