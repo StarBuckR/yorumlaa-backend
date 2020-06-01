@@ -3,7 +3,7 @@ class ApplicationController < ActionController::API
 
     helper_method :current_user, :logged_in?, :is_admin?, :render_not_logged_in,
                     :decode_token, :encode_token, :require_same_user, :require_admin,
-                    :require_login
+                    :require_login, :user_logged_in?
 
     # require same user for related and wanted functions
     def require_same_user
@@ -37,6 +37,10 @@ class ApplicationController < ActionController::API
         @current_user ||= User.find(user_id) if user_id
     end
 
+    def user_logged_in?
+        token = request.headers["Authorization"]
+        !!token
+    end
     # if logged in return true, else return false
     def logged_in?
         !!current_user

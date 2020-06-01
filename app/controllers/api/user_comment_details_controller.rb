@@ -4,6 +4,7 @@ class API::UserCommentDetailsController < ApplicationController
     before_action :set_details, only: [:update, :destroy] # set details before saving them for update and destroy func
     before_action :require_same_user, only: [:update, :destroy] # require same user for update and destroy func
     before_action :create_controls, only:[:create] # control credentials for create func
+    before_action :prevent_duplication, only: [:create] # prevent duplicate likes
 
     #def index
     #    render json: { message: "Deneme" }, status: :ok
@@ -91,6 +92,13 @@ class API::UserCommentDetailsController < ApplicationController
         if details && details.comment_id == @comment.id # if detail's comment id is equals to current comments id 
             render json: { message: "Yeniden like oluşturamazsınız, like'ı güncellemelisiniz" }, # display error and return
                 status: :unprocessable_entity and return
+        end
+    end
+
+    def prevent_duplication
+        set_comment
+        if UserCommentDetail.where(user_id: current_user.id).where(comment_id: @comment.id)
+            render json: { message: "Zaten bir like bulunuyor" }, status: :unprocessable_entity and return
         end
     end
 

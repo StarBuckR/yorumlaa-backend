@@ -5,8 +5,28 @@ class API::ProductsController < ApplicationController
     def show
         @product = Product.friendly.find(params[:id]) # get product from slug or id
         @comments = Comment.where(product_id: @product.id).all #get all comments under that product
+        @comment_liked = []
         @ratings = average_ratings(@product.id)
         @all_ratings = Rating.where(product_id: @product.id).all
+        @following = false
+        if user_logged_in?
+            is_following = Following.where(user_id: current_user.id).where(product_id: @product.id).first
+            if is_following
+                @following = true
+            end
+            @comments.each do |comment|
+                like = UserCommentDetail.where(user_id: current_user.id).where(comment_id: comment.id).first
+                if like
+                    if like.like
+                        @comment_liked.push("liked")
+                    else
+                        @comment_liked.push("disliked")
+                    end
+                else
+                    @comment_liked.push(" ")
+                end
+            end
+        end
 
         render :show, status: :ok # render product page
     end

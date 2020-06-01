@@ -16,9 +16,11 @@ end
 
 json.product @product
 
+json.following @following
+
 json.comments @comments.each_with_index.to_a do |(comment, index)|
     json.comment comment
-
+    json.like @comment_liked[index]
     average_rating = 0
     @all_ratings.each do |rating|
         rating.ratings.each do |value|
