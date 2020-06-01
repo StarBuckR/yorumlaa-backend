@@ -10,6 +10,6 @@ RSpec.describe "API::UsersController", type: :request do
     end
 
     it "returns 200 if the user id is found" do
-        
+        # todo
     end
 end
