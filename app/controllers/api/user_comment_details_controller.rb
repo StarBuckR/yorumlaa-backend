@@ -97,7 +97,7 @@ class API::UserCommentDetailsController < ApplicationController
 
     def prevent_duplication
         set_comment
-        if UserCommentDetail.where(user_id: current_user.id).where(comment_id: @comment.id)
+        if UserCommentDetail.where(user_id: current_user.id).where(comment_id: @comment.id).first
             render json: { message: "Zaten bir like bulunuyor" }, status: :unprocessable_entity and return
         end
     end

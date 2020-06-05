@@ -22,14 +22,13 @@ class API::FollowingsController < ApplicationController
             product = Product.find_by(id: follow.product_id)
             output.merge!("#{product.title}": Comment.where(product_id: product.id).where('updated_at > ?', follow.updated_at).count)
             update_integer = 1
-            if follow.update_notif = 1
+            if follow.update_notif > 0
                 update_integer = 0
             end
             follow.update(update_notif: update_integer)
         end
 
-        render json: output, status: :unprocessable_entity
+        render json: output, status: :ok
     end
 
-    private
 end
