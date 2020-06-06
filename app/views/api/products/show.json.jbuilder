@@ -21,12 +21,12 @@ json.following @following
 json.comments @comments.each_with_index.to_a do |(comment, index)|
     json.comment comment
     json.like @comment_liked[index]
+    
     average_rating = 0
-    @all_ratings.each do |rating|
-        rating.ratings.each do |value|
-            average_rating = (average_rating + value["rating_value"]).to_f / 2.to_f
-        end
+    @all_ratings[index].ratings.each do |value|
+        average_rating = (average_rating + value["rating_value"]).to_f / 2.to_f
     end
+    
 
     json.rating average_rating
 end
