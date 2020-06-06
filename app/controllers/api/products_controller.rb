@@ -27,7 +27,7 @@ class API::ProductsController < ApplicationController
                 end
             end
         end
-        byebug
+        
         render :show, status: :ok # render product page
     end
 
