@@ -1,6 +1,6 @@
 # Yorumlaa Backend
 
-Ruby on Rails backend(RESTFul API) of a site that my friends and I created. 
+Ruby on Rails backend(RESTFul API) of a site that my friends and I created. RESTFul API documentation is in Turkish.
 
 # Restful API #
 Heroku üzerinde çalışırken **localhost:3000** yerine **https://yorumlaa.herokuapp.com** kullanmalısınız.
